@@ -1,9 +1,14 @@
+// ref the speach api
 let synth = window.speechSynthesis;
+// define the answers array
 let theAnswers = [];
 let correctAns = "";
+// define the audio elements.
 let audio1 = new Audio("sounds/telephone-ring-02.mp3");
-let audio2 = new Audio("sounds/116390__dean-raul-diarchangeli__answering-machine.wav");
-
+let audio2 = new Audio(
+	"sounds/116390__dean-raul-diarchangeli__answering-machine.wav"
+);
+// define the vue app
 let app = new Vue({
 	el: "#app",
 	data: {
@@ -19,6 +24,7 @@ let app = new Vue({
 		play: false,
 		previous_active_id: 1,
 		currId: 14,
+		// set the items values
 		items: [
 			{ level: "15", amount: "1,000,000" },
 			{ level: "14", amount: "500,000" },
@@ -37,6 +43,7 @@ let app = new Vue({
 			{ level: "1", amount: "100" }
 		]
 	},
+	// fetch the questions from the api
 	async created() {
 		const res = await fetch(
 			"https://opentdb.com/api.php?amount=15&type=multiple"
@@ -46,7 +53,6 @@ let app = new Vue({
 		console.log(this.questions);
 		this.qDisplay();
 		this.shuffleThem();
-
 	},
 	computed: {
 		computedClass() {
@@ -55,6 +61,7 @@ let app = new Vue({
 		}
 	},
 	watch: {
+		// watch for changes in the vue elements
 		quesIdx() {
 			this.qDisplay();
 		},
@@ -63,7 +70,6 @@ let app = new Vue({
 		}
 	},
 	methods: {
-
 		decodeHtml(html) {
 			var txt = document.createElement("textarea");
 			txt.innerHTML = html;
@@ -79,21 +85,24 @@ let app = new Vue({
 			this.shuffleThem();
 		},
 		parseQuestion() {
+			// parse the json object and decode special chars
 			this.theQuestion = this.decodeHtml(this.questions[this.quesIdx].question);
-			correctAns = this.decodeHtml(
-				this.questions[this.quesIdx].correct_answer);
+			correctAns = this.decodeHtml(this.questions[this.quesIdx].correct_answer);
 			this.correctAns = this.decodeHtml(
-				this.questions[this.quesIdx].correct_answer);
+				this.questions[this.quesIdx].correct_answer
+			);
 		},
 		shuffleThem() {
 			theAnswers = [
 				this.questions[this.quesIdx].correct_answer,
 				...this.questions[this.quesIdx].incorrect_answers
 			];
+			// randomize the answer order
 			theAnswers.sort(() => Math.random() - 0.5);
 			console.log(theAnswers);
 		},
-		fillanswers: function () {
+		fillanswers: function() {
+			// display the answers in the block and speak the question and answers
 			this.message5 = this.decodeHtml(this.questions[this.quesIdx].question);
 			this.message1 = this.decodeHtml(theAnswers[0]);
 			this.message2 = this.decodeHtml(theAnswers[1]);
@@ -101,12 +110,11 @@ let app = new Vue({
 			this.message4 = this.decodeHtml(theAnswers[3]);
 
 			if (theAnswers.length > 0) {
-
-				this.speakMe("Heres the question")
+				this.speakMe("Heres the question");
 
 				this.speakMe(this.message5);
 
-				this.speakMe("Is the answer")
+				this.speakMe("Is the answer");
 				if (!this.message1 == "") {
 					this.speakMe(this.message1);
 				}
@@ -120,10 +128,9 @@ let app = new Vue({
 					this.speakMe(this.message4);
 				}
 			}
-
 		},
-		q1: async function (event) {
-			// `event` is the native DOM event
+		q1: async function(event) {
+			// the code below plays the correct answer sound
 			if (this.message1 == this.correctAns) {
 				let audio = new Audio("sounds/RightAnswer.ogg");
 				audio.play();
@@ -131,6 +138,7 @@ let app = new Vue({
 				this.speakMe(this.message5);
 				this.quesIdx += 1;
 			} else {
+				// the code below plays the incorrect answer sound
 				let audio = new Audio("sounds/WrongAnswer.ogg");
 				audio.play();
 				this.message5 = "WRONG ANSWER!";
@@ -138,8 +146,8 @@ let app = new Vue({
 				this.play = false;
 			}
 		},
-		q2: async function (event) {
-			// `event` is the native DOM event
+		q2: async function(event) {
+			// the code below plays the correct answer sound
 			if (this.message2 == this.correctAns) {
 				let audio = new Audio("sounds/RightAnswer.ogg");
 				audio.play();
@@ -147,6 +155,7 @@ let app = new Vue({
 				this.speakMe(this.message5);
 				this.quesIdx += 1;
 			} else {
+				// the code below plays the incorrect answer sound
 				let audio = new Audio("sounds/WrongAnswer.ogg");
 				audio.play();
 				this.message5 = "WRONG ANSWER!";
@@ -154,8 +163,8 @@ let app = new Vue({
 				this.play = false;
 			}
 		},
-		q3: async function (event) {
-			// `event` is the native DOM event
+		q3: async function(event) {
+			// the code below plays the correct answer sound
 			if (this.message3 == this.correctAns) {
 				let audio = new Audio("sounds/RightAnswer.ogg");
 				audio.play();
@@ -163,6 +172,7 @@ let app = new Vue({
 				this.speakMe(this.message5);
 				this.quesIdx += 1;
 			} else {
+				// the code below plays the incorrect answer sound
 				let audio = new Audio("sounds/WrongAnswer.ogg");
 				audio.play();
 				this.message5 = "WRONG ANSWER!";
@@ -170,8 +180,8 @@ let app = new Vue({
 				this.play = false;
 			}
 		},
-		q4: async function (event) {
-			// `event` is the native DOM event
+		q4: async function(event) {
+			// the code below plays the correct answer sound
 			if (this.message4 == this.correctAns) {
 				let audio = new Audio("sounds/RightAnswer.ogg");
 				audio.play();
@@ -179,6 +189,7 @@ let app = new Vue({
 				this.speakMe(this.message5);
 				this.quesIdx += 1;
 			} else {
+				// the code below plays the incorrect answer sound
 				let audio = new Audio("sounds/WrongAnswer.ogg");
 				audio.play();
 				this.message5 = "WRONG ANSWER!";
@@ -186,14 +197,18 @@ let app = new Vue({
 				this.play = false;
 			}
 		},
-		main: async function () {
+		main: async function() {
+			// get the reference
 			const client = stitch.Stitch.initializeDefaultAppClient(
 				"assign2-poll-oehqw"
 			);
+			// login
 			const user = await client.auth.loginWithCredential(
 				new stitch.AnonymousCredential()
 			);
+			// get the poll results
 			var result = await client.callFunction("getpollres");
+			// add data to addary
 			var dataArray = [result.a, result.b, result.c, result.d];
 			var ctx = document.getElementById("myChart").getContext("2d");
 			var myChart = new Chart(ctx, {
@@ -232,14 +247,19 @@ let app = new Vue({
 					}
 				}
 			});
+			// slow the time for display
 			setInterval(async () => {
+				// get the poll results from the db
 				result = await client.callFunction("getpollres");
+				// add data to the array
 				dataArray = [result.a, result.b, result.c, result.d];
+				// add the data to the chart
 				myChart.data.datasets[0].data = dataArray;
+				//update the chart.
 				myChart.update();
 			}, 1000);
 		},
-		speakMe: function (string) {
+		speakMe: function(string) {
 			// Create a new speech object, attaching the string of text to speak
 			let utterThis = new SpeechSynthesisUtterance(string);
 			let voices = window.speechSynthesis.getVoices();
@@ -247,15 +267,20 @@ let app = new Vue({
 			utterThis.voice = voices[1];
 			synth.speak(utterThis);
 		},
-		fiftyfifty: function () {
+		fiftyfifty: function() {
+			// Play the audio stream
 			let audio = new Audio("sounds/Fifty50.ogg");
 			audio.play();
-			let leftCount = theAnswers.length
+			// Check the number of remaining answers
+			let leftCount = theAnswers.length;
 			if (theAnswers.length >= 3) {
-				theAnswers.forEach(function (element, index) {
+				// if there are more that 2 quetions left then cont.
+				theAnswers.forEach(function(element, index) {
 					if (leftCount > 2) {
 						if (element != correctAns) {
+							// remove the aswers from the array
 							theAnswers.splice(index, 1, "");
+							// lower the count.
 							leftCount -= 1;
 						}
 					}
@@ -263,16 +288,19 @@ let app = new Vue({
 			}
 			this.fillanswers();
 		},
-		phoneFriend: async function () {
-			this.speakMe("We are going to try and get Bob on the Phone, A T & T Make it Happen");
 
-			setTimeout(function () {
-				audio1.play();	// Your code here
+		phoneFriend: async function() {
+			this.speakMe(
+				"We are going to try and get Bob on the Phone, A T & T Make it Happen"
+			);
+
+			setTimeout(function() {
+				audio1.play(); // Play the audio stream
 			}, 5000);
 
-			audio1.addEventListener('ended', function () {
-				audio2.play();	// Your code here
-			})
+			audio1.addEventListener("ended", function() {
+				audio2.play(); // Play the audio stream
+			});
 		}
 	}
 });
